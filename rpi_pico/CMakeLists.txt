@@ -10,14 +10,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
 
 # Initialize the SDK
-
 pico_sdk_init()
 
 add_executable(main
 		main.cpp
-		lib/hardware/Adafruit_BNO055.cpp
+		lib/hardware/compass_classes.cpp
 		lib/hardware/motor.cpp
 		lib/software/pid.cpp
+		lib/software/bitmask.cpp
 		pico-lib/definitions/gpio.cpp
 		pico-lib/definitions/i2c.cpp
 		pico-lib/definitions/serial.cpp
@@ -42,5 +42,3 @@ pico_enable_stdio_uart(main 1)
 
 # create map/bin/hex file etc.
 pico_add_extra_outputs(main)
-
-

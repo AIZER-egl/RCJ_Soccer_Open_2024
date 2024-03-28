@@ -35,6 +35,7 @@
 #include <vector>
 #include <cmath>
 #include <cstring>
+#include <iostream>
 #include "hardware/gpio.h"
 #include "hardware/i2c.h"
 
@@ -291,7 +292,8 @@ public:
         VECTOR_EULER = BNO055_EULER_H_LSB_ADDR,
         VECTOR_LINEARACCEL = BNO055_LINEAR_ACCEL_DATA_X_LSB_ADDR,
         VECTOR_GRAVITY = BNO055_GRAVITY_DATA_X_LSB_ADDR
-    } adafruit_vector_type_t;
+    } adafruit_vector_type_t;    std::vector<double> getQuat();
+
 
     Adafruit_BNO055(int32_t sensorID = -1, uint8_t address = BNO055_ADDRESS_A);
 
@@ -308,7 +310,6 @@ public:
                         uint8_t *mag);
 
     std::vector<double> getVector(adafruit_vector_type_t vector_type);
-    std::vector<double> getQuat();
     int8_t getTemp();
 
     /* Functions to deal with raw calibration data */
@@ -323,6 +324,8 @@ public:
     void enterNormalMode();
 
     float getYaw ();
+    float getPitch ();
+    float getRoll ();
 
 private:
     uint8_t read8(adafruit_bno055_reg_t);

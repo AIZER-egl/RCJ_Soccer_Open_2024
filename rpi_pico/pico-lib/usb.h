@@ -24,8 +24,11 @@ public:
 
     static Printer print;
 
-    std::string read() {
-        std::string data;
+    unsigned long read() {
+        // WARNING: This will interrupt the main thread, use with caution.
+        // In test local project there is a version that does not interrupt the main thread.
+        // If problems arise, use the version that does not interrupt the main thread.
+        unsigned long data;
         std::cin >> data;
         return data;
     }

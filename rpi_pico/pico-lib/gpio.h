@@ -21,6 +21,7 @@
 void pinMode(uint8_t pin, uint8_t mode);
 void digitalWrite(uint8_t pin, uint8_t value);
 void analogWrite(uint8_t pin, uint8_t value);
+void toggleFor(unsigned long ms, uint8_t pin);
 uint8_t digitalRead(uint8_t pin);
 uint16_t analogRead(uint8_t pin);
 

@@ -17,25 +17,27 @@
 #include "../../pico-lib/time.h"
 #include "../../pico-lib/usb.h"
 
-#define MOTOR_N_DIR 7
-#define MOTOR_N_PWM 6
-#define MOTOR_N_ENC_A 16
-#define MOTOR_N_ENC_B 17
+#define MOTOR_S_DIR 2
+#define MOTOR_S_PWM 3
+#define MOTOR_S_ENC_A 6
+#define MOTOR_S_ENC_B 7
 
+#define MOTOR_NW_DIR 8
+#define MOTOR_NW_PWM 9
+#define MOTOR_NW_ENC_A 10
+#define MOTOR_NW_ENC_B 11
 
-#define MOTOR_SW_DIR 4
-#define MOTOR_SW_PWM 5
-#define MOTOR_SW_ENC_A 6
-#define MOTOR_SW_ENC_B 7
+#define MOTOR_NE_DIR 12
+#define MOTOR_NE_PWM 13
+#define MOTOR_NE_ENC_A 14
+#define MOTOR_NE_ENC_B 15
 
-#define MOTOR_SE_DIR 8
-#define MOTOR_SE_PWM 9
-#define MOTOR_SE_ENC_A 10
-#define MOTOR_SE_ENC_B 11
+#define DRIBBLER_DIR 12
+#define DRIBBLER_PWM 13
 
-#define MOTOR_N 0b0000
-#define MOTOR_SE 0b0010
-#define MOTOR_SW 0b0001
+#define MOTOR_S 0b0000
+#define MOTOR_NE 0b0010
+#define MOTOR_NW 0b0001
 
 #define PULSES_PER_REVOLUTION 48
 #define GEAR_RATIO 9.68
@@ -67,10 +69,9 @@ namespace Motor {
     };
 
     struct Motor {
-        individualMotor motorN;
-        individualMotor motorSE;
-        individualMotor motorSW;
-        // todo: add pid
+        individualMotor motorS;
+        individualMotor motorNE;
+        individualMotor motorNW;
         PID pid;
         PID::PidParameters movePID;
         PID::PidParameters rotatePID;
@@ -80,13 +81,17 @@ namespace Motor {
 
     void begin ();
 
-    void motorN (int16_t speed);
-    void motorSE (int16_t speed);
+    void stop ();
 
-    void motorSW (int16_t speed);
+    void motorS (int16_t speed);
+    void motorNE (int16_t speed);
+    void motorNW (int16_t speed);
+
     void move (int16_t speed, int16_t direction, int16_t facing);
 
     void rotate (int16_t angle);
+
+    void dribbler(int16_t speed);
 }
 
 

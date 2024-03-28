@@ -49,6 +49,12 @@ void analogWrite(uint8_t pin, uint8_t value) {
     pwm_set_enabled(slice_num, true);
 }
 
+void toggleFor(unsigned long ms, uint8_t pin) {
+    digitalWrite(pin, HIGH);
+    sleep_ms(ms);
+    digitalWrite(pin, LOW);
+}
+
 uint16_t analogRead(uint8_t pin) {
     adc_init();
     adc_gpio_init(pin);

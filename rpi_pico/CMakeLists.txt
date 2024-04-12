@@ -16,8 +16,10 @@ add_executable(main
 		main.cpp
 		lib/hardware/compass_classes.cpp
 		lib/hardware/motor.cpp
+		lib/hardware/USB_Serial.cpp
 		lib/software/pid.cpp
 		lib/software/bitmask.cpp
+		lib/software/hex.cpp
 		pico-lib/definitions/gpio.cpp
 		pico-lib/definitions/i2c.cpp
 		pico-lib/definitions/serial.cpp
@@ -38,7 +40,7 @@ target_link_libraries(main hardware_irq)
 target_link_libraries(main hardware_timer)
 
 pico_enable_stdio_usb(main 1)
-pico_enable_stdio_uart(main 1)
+pico_enable_stdio_uart(main 0)
 
 # create map/bin/hex file etc.
 pico_add_extra_outputs(main)

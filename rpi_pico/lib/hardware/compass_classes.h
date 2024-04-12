@@ -298,6 +298,7 @@ public:
     Adafruit_BNO055(int32_t sensorID = -1, uint8_t address = BNO055_ADDRESS_A);
 
     bool begin(bool port, uint32_t baud, uint8_t sda, uint8_t scl, adafruit_bno055_opmode_t mode = OPERATION_MODE_NDOF);
+    bool isAlive();
     void setMode(adafruit_bno055_opmode_t mode);
     adafruit_bno055_opmode_t getMode();
     void setAxisRemap(adafruit_bno055_axis_remap_config_t remapcode);

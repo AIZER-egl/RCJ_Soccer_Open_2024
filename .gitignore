@@ -2,3 +2,6 @@ rpi_pico/build/
 rpi_pico/cmake-build-debug/
 rpi_pico/pico-sdk/
 rpi_pico/.vscode/
+rpi_pico/.idea/
+jetson/catkin_ws/build
+jetson/catkin_ws/devel

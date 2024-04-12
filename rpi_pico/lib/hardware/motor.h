@@ -66,6 +66,11 @@ namespace Motor {
 
         void getRPM_A ();
         void getRPM_B ();
+
+        PID::PidParameters rpmPID;
+        int delayMiliseconds = 20;
+        unsigned long lastIterationTime = 0;
+        int previousOut;
     };
 
     struct Motor {
@@ -80,6 +85,7 @@ namespace Motor {
     extern Motor motor;
 
     void begin ();
+    void tick();
 
     void stop ();
 
@@ -87,7 +93,11 @@ namespace Motor {
     void motorNE (int16_t speed);
     void motorNW (int16_t speed);
 
-    void move (int16_t speed, int16_t direction, int16_t facing);
+    void moveS (int16_t rpm);
+    void moveNE (int16_t rpm);
+    void moveNW (int16_t rpm);
+
+    void move (int16_t rpm, int16_t direction, int16_t facing);
 
     void rotate (int16_t angle);
 

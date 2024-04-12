@@ -1,8 +1,3 @@
-//
-// Created by kali on 2/7/24.
-//
-
-#include <cmath>
 #include "pid.h"
 
 void PID::reset(PidParameters& pid) {
@@ -24,7 +19,7 @@ void PID::compute(PidParameters& pid) {
         pid.errorSum += pid.error;
 
         if (std::abs(pid.errorSum) > pid.maxError) {
-            bool multiply = pid.errorSum / std::abs(pid.errorSum);
+            int multiply = pid.errorSum / std::abs(pid.errorSum);
             pid.errorSum = pid.maxError * multiply;
         }
 
@@ -35,12 +30,12 @@ void PID::compute(PidParameters& pid) {
         int output = proportionalTerm + integralTerm + derivativeTerm;
 
         if (std::abs(output) > pid.maxOutput) {
-            bool multiply = output / std::abs(output);
+            int multiply = output / std::abs(output);
             output = pid.maxOutput * multiply;
         }
 
         if (std::abs(output) < pid.minOutput) {
-            bool multiply = output / std::abs(output);
+            int multiply = output / std::abs(output);
             output = pid.minOutput * multiply;
         }
 

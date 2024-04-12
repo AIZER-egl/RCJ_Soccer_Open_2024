@@ -2,54 +2,45 @@
 // Created by kali on 3/14/24.
 //
 
+#include <iostream>
 #include "bitmask.h"
 
 namespace Bitmask {
     std::vector<BitmaskStructure> bitmask = {
             {
                 BITMASK_DEFAULT_VALUE,
-                static_cast<int>(MOTOR_SIZES::N_SPEED),
-                static_cast<int>(MOTOR_ADDRESS::N_SPEED)
+                static_cast<int>(MOTOR_SIZES::S_SPEED),
+                static_cast<int>(MOTOR_ADDRESS::S_SPEED)
             },
             {
                 BITMASK_DEFAULT_VALUE,
-                static_cast<int>(MOTOR_SIZES::SW_SPEED),
-                static_cast<int>(MOTOR_ADDRESS::SW_SPEED)
+                static_cast<int>(MOTOR_SIZES::NW_SPEED),
+                static_cast<int>(MOTOR_ADDRESS::NW_SPEED)
             },
             {
                 BITMASK_DEFAULT_VALUE,
-                static_cast<int>(MOTOR_SIZES::SE_SPEED),
-                static_cast<int>(MOTOR_ADDRESS::SE_SPEED)
+                static_cast<int>(MOTOR_SIZES::NE_SPEED),
+                static_cast<int>(MOTOR_ADDRESS::NE_SPEED)
             },
             {
                 BITMASK_DEFAULT_VALUE,
-                static_cast<int>(MOTOR_SIZES::N_RPM),
-                static_cast<int>(MOTOR_ADDRESS::N_RPM)
+                static_cast<int>(MOTOR_SIZES::S_DIR),
+                static_cast<int>(MOTOR_ADDRESS::S_DIR)
             },
             {
                 BITMASK_DEFAULT_VALUE,
-                static_cast<int>(MOTOR_SIZES::SW_RPM),
-                static_cast<int>(MOTOR_ADDRESS::SW_RPM)
+                static_cast<int>(MOTOR_SIZES::NW_DIR),
+                static_cast<int>(MOTOR_ADDRESS::NW_DIR)
             },
             {
                 BITMASK_DEFAULT_VALUE,
-                static_cast<int>(MOTOR_SIZES::SE_RPM),
-                static_cast<int>(MOTOR_ADDRESS::SE_RPM)
+                static_cast<int>(MOTOR_SIZES::NE_DIR),
+                static_cast<int>(MOTOR_ADDRESS::NE_DIR)
             },
             {
                 BITMASK_DEFAULT_VALUE,
                 static_cast<int>(COMPASS_SIZES::YAW),
                 static_cast<int>(COMPASS_ADDRESS::YAW)
-            },
-            {
-                BITMASK_DEFAULT_VALUE,
-                static_cast<int>(COMPASS_SIZES::PITCH),
-                static_cast<int>(COMPASS_ADDRESS::PITCH)
-            },
-            {
-                BITMASK_DEFAULT_VALUE,
-                static_cast<int>(COMPASS_SIZES::ROLL),
-                static_cast<int>(COMPASS_ADDRESS::ROLL)
             },
             {
                 BITMASK_DEFAULT_VALUE,
@@ -108,10 +99,10 @@ namespace Bitmask {
             }
     };
 
-    unsigned long generateBitmask () {
-        unsigned long generatedBitmask = 0;
+    uint64_t generateBitmask () {
+        uint64_t generatedBitmask = 0;
         for (int i = 0; i < bitmask.size(); i++) {
-            generatedBitmask |= (bitmask[i].value << bitmask[i].bitShift);
+            generatedBitmask |= (static_cast<uint64_t>(bitmask[i].value) << bitmask[i].bitShift);
         }
         return generatedBitmask;
     }
@@ -139,7 +130,7 @@ namespace Bitmask {
         }
     }
 
-    void setBitmask(unsigned long custom_bitmask) {
+    void setBitmask(uint64_t custom_bitmask) {
         for (int i = 0; i < bitmask.size(); i++) {
             bitmask[i].value = (custom_bitmask >> bitmask[i].bitShift) & ((1 << bitmask[i].bitSize) - 1);
         }

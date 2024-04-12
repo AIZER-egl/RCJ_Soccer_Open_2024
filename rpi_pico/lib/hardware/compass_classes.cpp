@@ -79,24 +79,17 @@ bool Adafruit_BNO055::begin(bool port, uint32_t baud, uint8_t sda, uint8_t scl, 
     } else if (port == I2C_PORT_1) {
         _port = i2c1;
     }
+
     i2c_init(i2c0, baud);
     gpio_set_function(sda, GPIO_FUNC_I2C);
     gpio_set_function(scl, GPIO_FUNC_I2C);
     gpio_pull_up(sda);
     gpio_pull_up(scl);
 
-
-    sleep_ms(1000); // hold on for boot
-
     uint8_t id = read8(BNO055_CHIP_ID_ADDR);
     std::cout << id << "\n";
     if (id != BNO055_ID) {
-        sleep_ms(1000); // hold on for boot
-        id = read8(BNO055_CHIP_ID_ADDR);
-        if (id != BNO055_ID) {
-            std::cout << "No BNO055 detected\n";
-            return false; // still not? ok bail
-        }
+        std::cout << "No BNO055 detected\n";
     }
 
     /* Switch to config mode (just in case since this is the default) */
@@ -142,6 +135,11 @@ bool Adafruit_BNO055::begin(bool port, uint32_t baud, uint8_t sda, uint8_t scl, 
     sleep_ms(20);
 
     return true;
+}
+
+bool Adafruit_BNO055::isAlive() {
+    uint8_t id = read8(BNO055_CHIP_ID_ADDR);
+    return id == BNO055_ID;
 }
 
 /*!
@@ -748,12 +746,13 @@ uint8_t Adafruit_BNO055::read8(adafruit_bno055_reg_t reg) {
 bool Adafruit_BNO055::readLen(adafruit_bno055_reg_t reg, uint8_t *buffer,
                               uint8_t len) {
     uint8_t reg_buf[1] = {(uint8_t)reg};
-    i2c_write_blocking(_port, _address, reg_buf, 1, true);
+    i2c_write_blocking(_port, _address, reg_buf, 1, false);
     return i2c_read_blocking(_port, _address, buffer, len, false);
 }
 
 float Adafruit_BNO055::getYaw() {
-    return getVector(Adafruit_BNO055::VECTOR_EULER)[0];
+    float v = getVector(Adafruit_BNO055::VECTOR_EULER)[0];
+    return v;
 }
 
 float Adafruit_BNO055::getPitch() {

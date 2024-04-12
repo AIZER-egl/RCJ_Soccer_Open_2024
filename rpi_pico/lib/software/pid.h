@@ -5,6 +5,7 @@
 #ifndef PICO_LIB_PID_H
 #define PICO_LIB_PID_H
 
+#include <cmath>
 #include "../../pico-lib/time.h"
 
 class PID {
@@ -23,7 +24,7 @@ public:
 
         int errorSum = 0;
         int previousError = 0;
-        int delayMiliseconds = 100;
+        int delayMiliseconds = 20;
         unsigned long lastIterationTime = 0;
 
         int error;

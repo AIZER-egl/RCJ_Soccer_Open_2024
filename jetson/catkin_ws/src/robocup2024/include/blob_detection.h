@@ -21,7 +21,7 @@ public:
 
     [[maybe_unused]] std::vector<Blob> detect(cv::Mat &frame);
 
-    [[maybe_unused]] static void plot_blobs(cv::Mat &frame, std::vector<Blob> &blobs);
+    [[maybe_unused]] static void plot_blobs(cv::Mat &frame, std::vector<Blob> &blobs, cv::Scalar color);
 
     [[maybe_unused]] void set_area(int minArea, int maxArea);
 

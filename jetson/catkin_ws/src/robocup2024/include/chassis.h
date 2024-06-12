@@ -26,8 +26,8 @@ public:
     static void moveNE(int rpm);
     static void moveNW(int rpm);
 
-    static void move(int rpm, int angle);
-    static void move(int rpm, int angle, int yaw, PID::PidParameters& pid);
+    static int move(int rpm, int angle);
+    static int move(int rpm, int angle, int yaw, PID::PidParameters& pid);
     static void rotate(int rpm);
 
     static bool rotateToAngle(float targetAngle, float yaw, PID::PidParameters& pid);

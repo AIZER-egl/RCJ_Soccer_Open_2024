@@ -54,48 +54,18 @@ namespace Bitmask {
             },
             {
                 BITMASK_DEFAULT_VALUE,
-                static_cast<int>(LDR_SIZES::LDR1),
-                static_cast<int>(LDR_ADDRESS::LDR1)
+                static_cast<int>(LDR_SIZES::STATUS),
+                static_cast<int>(LDR_ADDRESS::STATUS)
             },
             {
                 BITMASK_DEFAULT_VALUE,
-                static_cast<int>(LDR_SIZES::LDR2),
-                static_cast<int>(LDR_ADDRESS::LDR2)
+                static_cast<int>(SETTINGS_SIZES::TEAM),
+                static_cast<int>(SETTINGS_ADDRESS::TEAM)
             },
             {
                 BITMASK_DEFAULT_VALUE,
-                static_cast<int>(LDR_SIZES::LDR3),
-                static_cast<int>(LDR_ADDRESS::LDR3)
-            },
-            {
-                BITMASK_DEFAULT_VALUE,
-                static_cast<int>(LDR_SIZES::LDR4),
-                static_cast<int>(LDR_ADDRESS::LDR4)
-            },
-            {
-                BITMASK_DEFAULT_VALUE,
-                static_cast<int>(LDR_SIZES::LDR5),
-                static_cast<int>(LDR_ADDRESS::LDR5)
-            },
-            {
-                BITMASK_DEFAULT_VALUE,
-                static_cast<int>(LDR_SIZES::LDR6),
-                static_cast<int>(LDR_ADDRESS::LDR6)
-            },
-            {
-                BITMASK_DEFAULT_VALUE,
-                static_cast<int>(LDR_SIZES::LDR7),
-                static_cast<int>(LDR_ADDRESS::LDR7)
-            },
-            {
-                BITMASK_DEFAULT_VALUE,
-                static_cast<int>(LDR_SIZES::LDR8),
-                static_cast<int>(LDR_ADDRESS::LDR8)
-            },
-            {
-                BITMASK_DEFAULT_VALUE,
-                static_cast<int>(LDR_SIZES::LDR9),
-                static_cast<int>(LDR_ADDRESS::LDR9)
+                static_cast<int>(SETTINGS_SIZES::ATTACK),
+                static_cast<int>(SETTINGS_ADDRESS::ATTACK),
             }
     };
 

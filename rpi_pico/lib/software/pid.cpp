@@ -16,7 +16,7 @@ void PID::compute(PidParameters& pid) {
 
     if (millis() - pid.lastIterationTime >= pid.delayMiliseconds) {
         pid.lastIterationTime = millis();
-        pid.errorSum += pid.error;
+        pid.errorSum += pid.error * (pid.delayMiliseconds / 1000);
 
         if (std::abs(pid.errorSum) > pid.maxError) {
             int multiply = pid.errorSum / std::abs(pid.errorSum);

@@ -1,3 +1,4 @@
+.idea/
 rpi_pico/build/
 rpi_pico/cmake-build-debug/
 rpi_pico/pico-sdk/
@@ -5,3 +6,6 @@ rpi_pico/.vscode/
 rpi_pico/.idea/
 jetson/catkin_ws/build
 jetson/catkin_ws/devel
+jetson/catkin_ws/src/robocup2024/.idea
+jetson/catkin_ws/src/robocup2024/output_video_front.mp4
+jetson/catkin_ws/src/robocup2024/output_video_omni.mp4

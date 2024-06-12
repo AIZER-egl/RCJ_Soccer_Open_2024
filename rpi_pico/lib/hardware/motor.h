@@ -17,20 +17,20 @@
 #include "../../pico-lib/time.h"
 #include "../../pico-lib/usb.h"
 
-#define MOTOR_S_DIR 2
-#define MOTOR_S_PWM 3
-#define MOTOR_S_ENC_A 6
-#define MOTOR_S_ENC_B 7
+#define MOTOR_NW_DIR 12
+#define MOTOR_NW_PWM 13
+#define MOTOR_NW_ENC_A 14
+#define MOTOR_NW_ENC_B 15
 
-#define MOTOR_NW_DIR 8
-#define MOTOR_NW_PWM 9
-#define MOTOR_NW_ENC_A 10
-#define MOTOR_NW_ENC_B 11
+#define MOTOR_S_DIR 8
+#define MOTOR_S_PWM 9
+#define MOTOR_S_ENC_A 10
+#define MOTOR_S_ENC_B 11
 
-#define MOTOR_NE_DIR 12
-#define MOTOR_NE_PWM 13
-#define MOTOR_NE_ENC_A 14
-#define MOTOR_NE_ENC_B 15
+#define MOTOR_NE_DIR 2
+#define MOTOR_NE_PWM 3
+#define MOTOR_NE_ENC_A 6
+#define MOTOR_NE_ENC_B 7
 
 #define DRIBBLER_DIR 12
 #define DRIBBLER_PWM 13

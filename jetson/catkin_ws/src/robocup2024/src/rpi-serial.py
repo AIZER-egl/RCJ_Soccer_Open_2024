@@ -37,13 +37,13 @@ def callback(data):
 
 
 def serial_reader():
-    while True:
+    while not rospy.is_shutdown():
         data = ser.readline()
 
         if data:
             data = data.decode('utf-8').strip()
             decoded_number = decode_hex(data)
-            rospy.loginfo("Decoded values from rpi pico %lu", decoded_number)
+            # rospy.loginfo("Decoded values from rpi pico %lu", decoded_number)
 
             if isinstance(decoded_number, int) and (math.pow(2, 64) - 1) > decoded_number > 0:
                 pub.publish(decoded_number)

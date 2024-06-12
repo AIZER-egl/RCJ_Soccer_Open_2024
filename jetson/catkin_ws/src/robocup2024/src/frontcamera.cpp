@@ -2,10 +2,13 @@
 #include <string>
 #include <ros/ros.h>
 #include <std_msgs/Float32MultiArray.h>
+#include <std_msgs/Bool.h>
+
 #include <opencv4/opencv2/opencv.hpp>
 
 #include "preprocessing.h"
 #include "blob_detection.h"
+#include "gstreamer.h"
 
 #define KEY_ESC 27
 #define WIDTH 640
@@ -17,7 +20,7 @@
 
 #define BLUE true
 #define YELLOW false
-#define TEAM BLUE
+bool TEAM = BLUE;
 
 bool ballInterceptWithGoal(BlobDetection::Blob ball, BlobDetection::Blob goal) {
     bool leftIntercept = ball.x < goal.x;
@@ -25,16 +28,58 @@ bool ballInterceptWithGoal(BlobDetection::Blob ball, BlobDetection::Blob goal) {
     return leftIntercept && rightIntercept;
 }
 
+void settings_callback(const std_msgs::Bool::ConstPtr& msg) {
+    TEAM = msg -> data;
+}
+
+float ballCenterX;
+float ballCenterY;
+float goalCenterX;
+float goalCenterY;
+float goalCorner1X;
+float goalCorner1Y;
+float goalCorner2X;
+float goalCorner2Y;
+float goalAngle1;
+float goalAngle2;
+float goalAngle;
+float ballAngle;
+float ballDistance;
+float goalCenterDistance;
+
+void front_message(const std_msgs::Float32MultiArray::ConstPtr& msg) {
+    ballCenterX = msg -> data[0];
+    ballCenterY = msg -> data[1];
+    goalCenterX = msg -> data[2];
+    goalCenterY = msg -> data[3];
+    goalCorner1X = msg -> data[4];
+    goalCorner1Y = msg -> data[5];
+    goalCorner2X = msg -> data[6];
+    goalCorner2Y = msg -> data[7];
+    goalAngle1 = msg -> data[8];
+    goalAngle2 = msg -> data[9];
+    goalCenterDistance = msg -> data[10];
+    goalAngle = msg -> data[11];
+    ballAngle = msg -> data[12];
+    ballDistance = msg -> data[13];
+}
+
+
 int main (int argc, char **argv) {
 
     ros::init(argc, argv, "frontcamera");
 
     ros::NodeHandle nh;
     ros::Publisher pub = nh.advertise<std_msgs::Float32MultiArray>("frontcamera_topic", 10);
+    ros::Subscriber settings = nh.subscribe("settings", 10, settings_callback);
+
 
     ROS_INFO("Using OPENCV version %s", CV_VERSION);
 
-    cv::VideoCapture cap("nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM), width=(int)1280, height=(int)1280, framerate=(fraction)30/1 ! nvvidconv flip-method=0 ! video/x-raw, width=(int)1280, height=(int)1280, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink");
+    auto gstreamer = new Gstreamer();
+    gstreamer -> set_sensor_id(0);
+
+    cv::VideoCapture cap(gstreamer -> get_command());
 
     if (!cap.isOpened()) {
         ROS_FATAL("Could not open camera");
@@ -47,29 +92,29 @@ int main (int argc, char **argv) {
     blueDetection.set_area(750, 100000);
 
     BlobDetection ballDetection;
-    ballDetection.set_color_range(cv::Scalar(0, 36, 124), cv::Scalar(12, 88, 255));
+    ballDetection.set_color_range(cv::Scalar(0, 0, 0), cv::Scalar(51, 75, 255));
     ballDetection.set_area(15, 100000);
 
     BlobDetection yellowDetection;
     yellowDetection.set_color_range(cv::Scalar(0, 133, 141), cv::Scalar(24, 224, 224));
     yellowDetection.set_area(500, 100000);
 
-    for (unsigned long frame_id = 0;;frame_id++) {
+    for (unsigned long frame_id = 0;ros::ok();frame_id++) {
         cv::Mat frame;
         cap >> frame;
 
         preprocessing::resize(frame, WIDTH, HEIGHT);
         preprocessing::saturation(frame, 2.7);
-        cv::rectangle(frame, cv::Point(0, 0), cv::Point(WIDTH - 1, 30), cv::Scalar(255, 255, 255), cv::FILLED);
+//        cv::rectangle(frame, cv::Point(0, 0), cv::Point(WIDTH - 1, 30), cv::Scalar(255, 255, 255), cv::FILLED);
 
         std::vector<BlobDetection::Blob> blueBlobs = blueDetection.detect(frame);
         std::vector<BlobDetection::Blob> ballBlobs = ballDetection.detect(frame);
         std::vector<BlobDetection::Blob> yellowBlobs = yellowDetection.detect(frame);
 
 
-        BlobDetection::plot_blobs(frame, ballBlobs);
-        BlobDetection::plot_blobs(frame, blueBlobs);
-        BlobDetection::plot_blobs(frame, yellowBlobs);
+        BlobDetection::plot_blobs(frame, ballBlobs, cv::Scalar(0, 0, 255));
+        BlobDetection::plot_blobs(frame, blueBlobs, cv::Scalar(255, 0, 0));
+        BlobDetection::plot_blobs(frame, yellowBlobs, cv::Scalar(0, 255, 255));
 
         float ballCenterX = 9999;
         float ballCenterY = 9999;
@@ -98,7 +143,7 @@ int main (int argc, char **argv) {
             if (angle < 0) angle = (90 + angle) * -1;
             else angle = 90 - angle;
 
-            double distance = 9 * std::pow(10, -11) * std::pow(ballDistancePixels, 4.7);
+            double distance = ballDistancePixels;
 
             ballDistance = distance;
             ballAngle = angle;
@@ -128,7 +173,6 @@ int main (int argc, char **argv) {
             goalAngle = atan((HEIGHT - goalCenterY) / (WIDTH / 2 - goalCenterX)) * 180 / PI;
 
             goalCenterDistance = std::sqrt(std::pow(WIDTH / 2 - goalCenterX, 2) + std::pow(HEIGHT - goalCenterY, 2));
-            goalCenterDistance = (-19.1033) / (1 - 29.841 * std::pow(EULER, -0.0092 * goalCenterDistance));
 
             if (goalAngle > 0) goalAngle -= 90;
             else goalAngle += 90;

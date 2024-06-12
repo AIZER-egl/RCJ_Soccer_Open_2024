@@ -23,8 +23,9 @@ def frames_to_video(input_dir, output_video, fps=30):
     files.sort(key=lambda x: int(x.split('_')[1].split('.')[0]))
 
     # Write frames to the video
-    for file in files:
+    for i, file in enumerate(files):
         frame = cv2.imread(os.path.join(input_dir, file))
+        print(f"frame: {i}/{len(files)}")
         out.write(frame)
 
     # Release the VideoWriter object
@@ -34,10 +35,10 @@ def frames_to_video(input_dir, output_video, fps=30):
 
 
 # Example usage
-input_directory = "/home/kali/frontcamera"
+input_directory = "/home/aizer/frontcamera"
 output_video = "output_video_front.mp4"
 frames_to_video(input_directory, output_video)
 
-input_directory = "/home/kali/omnicamera"
+input_directory = "/home/aizer/omnicamera"
 output_video = "output_video_omni.mp4"
 frames_to_video(input_directory, output_video)

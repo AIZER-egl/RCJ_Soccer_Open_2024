@@ -50,27 +50,21 @@ namespace RPI_Bitmask {
     };
 
     enum class LDR_ADDRESS {
-        LDR1 = 0x2D,
-        LDR2 = 0x2E,
-        LDR3 = 0x2F,
-        LDR4 = 0x30,
-        LDR5 = 0x31,
-        LDR6 = 0x32,
-        LDR7 = 0x33,
-        LDR8 = 0x34,
-        LDR9 = 0x35,
+        STATUS = 0x2D,
     };
 
     enum class LDR_SIZES {
-        LDR1 = 1,
-        LDR2 = 1,
-        LDR3 = 1,
-        LDR4 = 1,
-        LDR5 = 1,
-        LDR6 = 1,
-        LDR7 = 1,
-        LDR8 = 1,
-        LDR9 = 1,
+        STATUS = 1,
+    };
+
+    enum class SETTINGS_ADDRESS {
+        TEAM = 0x2E,
+        ATTACK = 0x2F
+    };
+
+    enum class SETTINGS_SIZES {
+        TEAM = 1,
+        ATTACK = 1
     };
 
     struct BitmaskStructure {

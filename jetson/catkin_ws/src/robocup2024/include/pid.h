@@ -26,7 +26,7 @@ public:
         float ki;
         float kd;
 
-        int errorSum = 0;
+        float errorSum = 0;
         int previousError = 0;
         int delayMiliseconds = 20;
         unsigned long lastIterationTime = 0;

@@ -48,13 +48,13 @@ BlobDetection::BlobDetection() = default;
     return blobs;
 }
 
-[[maybe_unused]] void BlobDetection::plot_blobs(cv::Mat &frame, std::vector<BlobDetection::Blob> &blobs) {
+[[maybe_unused]] void BlobDetection::plot_blobs(cv::Mat &frame, std::vector<BlobDetection::Blob> &blobs, cv::Scalar color) {
     for (const auto &blob : blobs) {
         cv::rectangle(
             frame,
             cv::Point(blob.x, blob.y),
             cv::Point(blob.x + blob.w, blob.y + blob.h),
-            cv::Scalar(0, 255, 0),
+            color,
             2
         );
     }

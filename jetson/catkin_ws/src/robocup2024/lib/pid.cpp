@@ -1,4 +1,5 @@
 #include "pid.h"
+#include <ros/ros.h>
 
 uint64_t PID::millis() {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -20,7 +21,7 @@ void PID::compute(PidParameters& pid) {
 
     if (PID::millis() - pid.lastIterationTime >= pid.delayMiliseconds) {
         pid.lastIterationTime = PID::millis();
-        pid.errorSum += pid.error;
+        pid.errorSum += static_cast<float>(pid.error) * static_cast<float>(static_cast<float>(pid.delayMiliseconds) / static_cast<float>(1000));
 
         if (std::abs(pid.errorSum) > pid.maxError) {
             int multiply = pid.errorSum / std::abs(pid.errorSum);

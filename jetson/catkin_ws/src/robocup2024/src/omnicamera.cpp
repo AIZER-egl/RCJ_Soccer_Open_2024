@@ -14,7 +14,7 @@
 #define EULER 2.71828
 
 bool g_shutdown_request = false;
-cv::VideoCapture cap("nvarguscamerasrc sensor-id=1 ! video/x-raw(memory:NVMM), width=(int)1280, height=(int)1280, framerate=(fraction)30/1 ! nvvidconv flip-method=0 ! video/x-raw, width=(int)1280, height=(int)1280, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink");
+cv::VideoCapture cap("nvarguscamerasrc sensor-id=1 exposuretimerange='210000 256000' ! video/x-raw(memory:NVMM), width=(int)1280, height=(int)1280, framerate=(fraction)30/1 ! nvvidconv flip-method=0 ! video/x-raw, width=(int)1280, height=(int)1280, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink");
 
 void sigintHandler(int sig) {
 	ROS_INFO("Shutdown request detected, shutting down");
@@ -80,10 +80,10 @@ int main (int argc, char **argv) {
     }
 
     BlobDetection ballDetection;
-    ballDetection.set_color_range(cv::Scalar(0, 12, 93), cv::Scalar(37, 35, 182));
+    ballDetection.set_color_range(cv::Scalar(0, 16, 103), cv::Scalar(23, 75, 255));
     ballDetection.set_area(5, 100000);
 
-    for (int frame_id = 0;;frame_id++) {
+    for (int frame_id = 0;ros::ok();frame_id++) {
         cv::Mat frame;
         cap >> frame;
 
@@ -152,8 +152,6 @@ int main (int argc, char **argv) {
     msg.data[0] = -1;
     msg.data[1] = -1;
     pub.publish(msg);
-
-    for (;;);
 
     return 0;
 }

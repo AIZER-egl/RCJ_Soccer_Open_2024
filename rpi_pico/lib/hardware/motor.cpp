@@ -86,7 +86,11 @@ namespace Motor {
         }
 
         float rpm = pulsesB * 1000 / 20 * 60 / 464.64;
-        rpmB = rpm;
+
+        // When the motor is stalled, the rpm should be 0 but there is a mechanical state where it is in front of the sensor generating a absurdly high rpm value
+        if (rpm <= 350) {
+            rpmB = rpm;
+        }
 
         switch (id) {
             case MOTOR_S:
@@ -221,25 +225,25 @@ namespace Motor {
         motor.motorS.rpmPID.minOutput = 0;
         motor.motorS.rpmPID.maxError = 1000.0;
         motor.motorS.rpmPID.errorThresholdPermission = 3.0;
-        motor.motorS.rpmPID.kp = 0.9;
-        motor.motorS.rpmPID.ki = 0.3;
-        motor.motorS.rpmPID.kd = 0.1;
+        motor.motorS.rpmPID.kp = 0.6;
+        motor.motorS.rpmPID.ki = 0.4;
+        motor.motorS.rpmPID.kd = 0;
 
         motor.motorNE.rpmPID.maxOutput = 255;
         motor.motorNE.rpmPID.minOutput = 0;
         motor.motorNE.rpmPID.maxError = 1000.0;
         motor.motorNE.rpmPID.errorThresholdPermission = 3.0;
-        motor.motorNE.rpmPID.kp = 1.4;
-        motor.motorNE.rpmPID.ki = 0.3;
-        motor.motorNE.rpmPID.kd = 0.2;
+        motor.motorNE.rpmPID.kp = 0.6;
+        motor.motorNE.rpmPID.ki = 0.4;
+        motor.motorNE.rpmPID.kd = 0;
 
         motor.motorNW.rpmPID.maxOutput = 255;
         motor.motorNW.rpmPID.minOutput = 0;
         motor.motorNW.rpmPID.maxError = 1000.0;
         motor.motorNW.rpmPID.errorThresholdPermission = 3.0;
-        motor.motorNW.rpmPID.kp = 1.4;
-        motor.motorNW.rpmPID.ki = 0.3;
-        motor.motorNW.rpmPID.kd = 0.2;
+        motor.motorNW.rpmPID.kp = 0.6;
+        motor.motorNW.rpmPID.ki = 0.4;
+        motor.motorNW.rpmPID.kd = 0;
     }
 
     void rotate(int16_t angle) {
@@ -334,13 +338,17 @@ namespace Motor {
         motor.motorS.rpmPID.target = std::abs(rpm);
         motor.pid.compute(motor.motorS.rpmPID);
 
-        if (rpm > 0) {
-            motor.motorS.previousOut = std::abs(motor.motorS.previousOut) + motor.motorS.rpmPID.output;
-            motor.motorS.previousOut = std::clamp(motor.motorS.previousOut, 20, 200);
-        } else {
+        if (rpm < 0) {
+            if (motor.motorS.previousOut > 0) motor.motorS.previousOut *= -1;
             motor.motorS.previousOut = motor.motorS.previousOut - motor.motorS.rpmPID.output;
-            motor.motorS.previousOut = std::clamp(motor.motorS.previousOut, -200, -20);
+            motor.motorS.previousOut = std::clamp(motor.motorS.previousOut, -255, -20);
+        } else {
+            if (motor.motorS.previousOut < 0) motor.motorS.previousOut *= -1;
+            motor.motorS.previousOut = motor.motorS.previousOut + motor.motorS.rpmPID.output;
+            motor.motorS.previousOut = std::clamp(motor.motorS.previousOut, 20, 255);
         }
+
+//        std::cout << " rpm: " << motor.motorS.rpmB << " out: " << motor.motorS.rpmPID.output << " prev: " << motor.motorS.previousOut << std::endl;
 
         motorS(motor.motorS.previousOut);
     }
@@ -360,13 +368,17 @@ namespace Motor {
         motor.motorNW.rpmPID.target = std::abs(rpm);
         motor.pid.compute(motor.motorNW.rpmPID);
 
-        if (rpm > 0) {
+        if (rpm < 0) {
+            if (motor.motorNW.previousOut > 0) motor.motorNW.previousOut *= -1;
             motor.motorNW.previousOut = motor.motorNW.previousOut - motor.motorNW.rpmPID.output;
-            motor.motorNW.previousOut = std::clamp(motor.motorNW.previousOut, 20, 200);
+            motor.motorNW.previousOut = std::clamp(motor.motorNW.previousOut, -255, -20);
         } else {
-            motor.motorNW.previousOut = motor.motorNW.previousOut - motor.motorNW.rpmPID.output;
-            motor.motorNW.previousOut = std::clamp(motor.motorNW.previousOut, -200, -20);
+            if (motor.motorNW.previousOut < 0) motor.motorNW.previousOut *= -1;
+            motor.motorNW.previousOut = motor.motorNW.previousOut + motor.motorNW.rpmPID.output;
+            motor.motorNW.previousOut = std::clamp(motor.motorNW.previousOut, 20, 255);
         }
+
+//        std::cout << " rpm: " << motor.motorNW.rpmB << " output: " << motor.motorNW.previousOut << std::endl;
 
         motorNW(motor.motorNW.previousOut);
     }
@@ -386,12 +398,14 @@ namespace Motor {
         motor.motorNE.rpmPID.target = std::abs(rpm);
         motor.pid.compute(motor.motorNE.rpmPID);
 
-        if (rpm > 0) {
+        if (rpm < 0) {
+            if (motor.motorNE.previousOut > 0) motor.motorNE.previousOut *= -1;
             motor.motorNE.previousOut = motor.motorNE.previousOut - motor.motorNE.rpmPID.output;
-            motor.motorNE.previousOut = std::clamp(motor.motorNE.previousOut, 20, 200);
+            motor.motorNE.previousOut = std::clamp(motor.motorNE.previousOut, -255, -20);
         } else {
-            motor.motorNE.previousOut = motor.motorNE.previousOut - motor.motorNE.rpmPID.output;
-            motor.motorNE.previousOut = std::clamp(motor.motorNE.previousOut, -200, -20);
+            if (motor.motorNE.previousOut < 0) motor.motorNE.previousOut *= -1;
+            motor.motorNE.previousOut = motor.motorNE.previousOut + motor.motorNE.rpmPID.output;
+            motor.motorNE.previousOut = std::clamp(motor.motorNE.previousOut, 20, 255);
         }
 
         motorNE(motor.motorNE.previousOut);

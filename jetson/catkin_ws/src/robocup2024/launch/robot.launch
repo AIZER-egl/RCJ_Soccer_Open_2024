@@ -2,6 +2,6 @@
   <node pkg="robocup2024" type="omnicamera" name="omnicamera"/>
   <node pkg="robocup2024" type="frontcamera" name="frontcamera"/>
   <node pkg="robocup2024" type="strategy" name="strategy"/>
-  <node pkg="robocup2024" type="rpi-serial.py" name="rpiserial"/>
+  <node pkg="robocup2024" type="rpi-serial.py" name="rpiserialpy"/>
 </launch>
 

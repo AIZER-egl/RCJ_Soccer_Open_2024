@@ -24,8 +24,11 @@ void Chassis::moveNW(int rpm) {
     RPI_Bitmask::setBitmaskValue(rpm > 0, static_cast<int>(RPI_Bitmask::MOTOR_ADDRESS::NW_DIR));
 }
 
-void Chassis::move(int rpm, int angle) {
+int Chassis::move(int rpm, int angle) {
+    angle = Angle::to360(angle);
     angle = 360 - angle;
+
+
 
     float radians = angle * PI / 180;
 
@@ -39,14 +42,17 @@ void Chassis::move(int rpm, int angle) {
     ne_speed = ne_speed / max_speed * rpm;
     nw_speed = nw_speed / max_speed * rpm;
 
-    ROS_INFO("converted - a: %d, s: %f, ne: %f, nw: %f", angle, s_speed, ne_speed, nw_speed);
+//    ROS_INFO("converted - a: %d, s: %f, ne: %f, nw: %f", angle, s_speed, ne_speed, nw_speed);
 
     moveS(s_speed);
     moveNE(ne_speed);
     moveNW(nw_speed);
+
+    return angle;
 }
 
-void Chassis::move(int rpm, int angle, int yaw, PID::PidParameters& pid) {
+int Chassis::move(int rpm, int angle, int yaw, PID::PidParameters& pid) {
+    angle = Angle::to360(angle);
     angle = 360 - angle;
 
     float radians = angle * PI / 180;
@@ -61,21 +67,21 @@ void Chassis::move(int rpm, int angle, int yaw, PID::PidParameters& pid) {
     pid.error = pid.target - yaw;
     PID::compute(pid);
 
-    pid.output *= -1;
-
-    s_speed = s_speed / max_speed * rpm + pid.output;
-    ne_speed = ne_speed / max_speed * rpm + pid.output;
-    nw_speed = nw_speed / max_speed * rpm + pid.output;
+    s_speed = s_speed / max_speed * rpm - pid.output;
+    ne_speed = ne_speed / max_speed * rpm - pid.output;
+    nw_speed = nw_speed / max_speed * rpm - pid.output;
 
     s_speed = Chassis::clamp(s_speed, static_cast<float>(-255), static_cast<float>(255));
     ne_speed = Chassis::clamp(ne_speed, static_cast<float>(-255), static_cast<float>(255));
     nw_speed = Chassis::clamp(nw_speed, static_cast<float>(-255), static_cast<float>(255));
 
-    ROS_INFO("yaw: %d, out: %d, converted a: %d, s: %f, ne: %f, nw: %f", yaw, pid.output, angle, s_speed, ne_speed, nw_speed);
 
     moveS(s_speed);
     moveNE(ne_speed);
     moveNW(nw_speed);
+
+    ROS_INFO("yaw: %d, out: %d, acc_err: %f, s: %f, ne: %f, nw: %f", yaw, pid.output, pid.errorSum, s_speed, ne_speed, nw_speed);
+    return angle;
 }
 
 void Chassis::rotate(int rpm) {
@@ -96,7 +102,7 @@ bool Chassis::rotateToAngle(float targetAngle, float yaw, PID::PidParameters& pi
 
     PID::compute(pid);
 
-    ROS_INFO("err: %d, yaw: %f, out: %d, sum: %d", error, yaw, pid.output, pid.errorSum);
+    ROS_INFO("err: %d, yaw: %f, out: %d, sum: %f", error, yaw, pid.output, pid.errorSum);
     moveS(pid.output);
     moveNE(pid.output);
     moveNW(pid.output);

@@ -5,12 +5,12 @@
 
 Robocup Junior Soccer Open es un juego de fútbol a escala entre dos equipos. Cada equipo lleva dos robots que deberán jugar de manera autónoma durante dos tiempos de 10 minutos con un descanso de 5 minutos.
 
-![This is an alt text.](https://i.ibb.co/grqQbqg/Robots.jpg)
+![This is an alt text.](https://i.ibb.co/51pCXpc/Robots.jpg)
 
 _Foto de los robots pre-torneo_
 
 ### Equipo
-![This is an alt text.](https://i.ibb.co/BG2YCpb/Equipo.jpg)
+![This is an alt text.](https://i.ibb.co/42R0Vqz/Equipo.jpg)
 
 _Roberta, Iker, Fátima, Alejandro._
 
